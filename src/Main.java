@@ -1,7 +1,13 @@
 public class Main {
+  static public void createAndShowGUI() {
+    new MainWindow();
+  }
 
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-
+  static public void main(String args[]) {
+    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        createAndShowGUI();
+      }
+    });
+  }
 }
