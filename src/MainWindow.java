@@ -52,6 +52,7 @@ public class MainWindow extends JFrame {
 
   private void InitCanvas() {
     canvas = new PaintCanvas();
+    canvas.attachSlider(leftPanel.getSlider());
 
     constraints.fill = GridBagConstraints.BOTH;
     constraints.anchor = GridBagConstraints.CENTER;

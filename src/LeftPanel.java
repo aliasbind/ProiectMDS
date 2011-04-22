@@ -10,8 +10,12 @@ public class LeftPanel extends JPanel {
     ((GridLayout) this.getLayout()).setVgap(10);
     this.add(new JLabel("Brush Size: "));
 
-    brushSlider = new JSlider();
+    brushSlider = new JSlider(1, 24);
     this.add(brushSlider);
+  }
+
+  public JSlider getSlider() {
+    return brushSlider;
   }
 
   private JSlider brushSlider;
