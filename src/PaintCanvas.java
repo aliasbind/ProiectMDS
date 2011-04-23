@@ -23,9 +23,11 @@ import java.util.ArrayList;
 public class PaintCanvas extends Canvas {
 
   private ArrayList<Point> points;
+  private ArrayList<Integer> sizes;
 
   PaintCanvas() {
     points = new ArrayList<Point>();
+    sizes = new ArrayList<Integer>();
     paintSize = 3;
   }
 
@@ -34,12 +36,12 @@ public class PaintCanvas extends Canvas {
     this.addMouseMotionListener(new MouseMotionListener() {
       public void mouseDragged(MouseEvent e) {
         points.add(new Point(e.getX(), e.getY()));
+        sizes.add(new Integer(paintSize));
         repaint(e.getX()-paintSize, e.getY()-paintSize, 
                 paintSize*2, paintSize*2);
       }
 
-      public void mouseMoved(MouseEvent e) {
-      }
+      public void mouseMoved(MouseEvent e) {}
     });
   }
 
@@ -49,8 +51,11 @@ public class PaintCanvas extends Canvas {
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                          RenderingHints.VALUE_ANTIALIAS_ON);
     super.paint(g);
-    for(Point pt : points) {
-      g2d.fill(new Ellipse2D.Float(pt.x, pt.y, paintSize, paintSize));
+    int i;
+    for(i=0; i<points.size(); i++) {
+      Point pt = points.get(i);
+      Integer x = sizes.get(i);
+      g2d.fill(new Ellipse2D.Float(pt.x, pt.y, x, x));
     }
   }
 
