@@ -3,8 +3,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
+
 import java.awt.geom.Line2D;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
+
 import java.awt.Point;
 import java.awt.RenderingHints;
 
@@ -23,12 +26,14 @@ import javax.swing.event.ChangeEvent;
 
 public class PaintCanvas extends Canvas {
 
-  private ArrayList<Point> points;
-  private ArrayList<Integer> sizes;
+  private GeneralPath path;
+  private Point lastPoint;
+  private int paintSize;
+  private JSlider slider;
 
   PaintCanvas() {
-    points = new ArrayList<Point>();
-    sizes = new ArrayList<Integer>();
+    path = new GeneralPath();
+    lastPoint = null;
     paintSize = 3;
   }
 
@@ -36,13 +41,28 @@ public class PaintCanvas extends Canvas {
 
     this.addMouseMotionListener(new MouseMotionListener() {
       public void mouseDragged(MouseEvent e) {
-        points.add(new Point(e.getX(), e.getY()));
-        sizes.add(new Integer(paintSize));
-        repaint(e.getX()-paintSize, e.getY()-paintSize, 
-                paintSize*2, paintSize*2);
+        path.lineTo((float) e.getX(), (float) e.getY());
+        path.moveTo((float) e.getX(), (float) e.getY());
+      //repaint(e.getX()-paintSize, e.getY()-paintSize, 
+      //paintSize*2, paintSize*2);
+        handleRepainting(lastPoint, new Point(e.getX(), e.getY()));
+        lastPoint = new Point(e.getX(), e.getY());
+      //repaint();
       }
 
       public void mouseMoved(MouseEvent e) {}
+    });
+
+    this.addMouseListener(new MouseListener() {
+      public void mousePressed(MouseEvent e) {
+        path.moveTo(e.getX(), e.getY());
+        lastPoint = new Point(e.getX(), e.getY());
+      }
+
+      public void mouseReleased(MouseEvent e) {}
+      public void mouseClicked(MouseEvent e) {}
+      public void mouseEntered(MouseEvent e) {}
+      public void mouseExited(MouseEvent e) {}
     });
   }
 
@@ -50,14 +70,38 @@ public class PaintCanvas extends Canvas {
     Graphics2D g2d = (Graphics2D) g;
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                          RenderingHints.VALUE_ANTIALIAS_ON);
-    g2d.setBackground(Color.red);
-    super.paint(g);
+    g2d.setBackground(Color.white);
     g.setColor(Color.black);
-    int i;
-    for(i=0; i<points.size(); i++) {
-      Point pt = points.get(i);
-      Integer x = sizes.get(i);
-      g2d.fill(new Ellipse2D.Float(pt.x, pt.y, x, x));
+
+    super.paint(g);
+    g2d.draw(path);
+    //int i;
+    //for(i=0; i<points.size(); i++) {
+      //Point pt = points.get(i);
+      //Integer x = sizes.get(i);
+      //g2d.fill(new Ellipse2D.Float(pt.x, pt.y, x, x));
+    //}
+  }
+
+  private void handleRepainting(Point start, Point end) {
+    int dx = Math.abs(start.x-end.x) + 3;
+    int dy = Math.abs(start.y-end.y) + 3;
+
+    if(start.x < end.x) {
+      if(start.y < end.y) {
+        repaint(start.x, start.y, dx, dy);
+      }
+      else {
+        repaint(start.x, end.y, dx, dy);
+      }
+    }
+    else {
+      if(start.y < end.y) {
+        repaint(end.x, start.y, dx, dy);
+      }
+      else {
+        repaint(end.x, end.y, dx, dy);
+      }
     }
   }
 
@@ -71,6 +115,4 @@ public class PaintCanvas extends Canvas {
     });
   }
   
-  private JSlider slider;
-  private int paintSize;
 }
