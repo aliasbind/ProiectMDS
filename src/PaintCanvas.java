@@ -12,13 +12,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
-import java.util.ArrayList;
 
 public class PaintCanvas extends Canvas {
 
@@ -46,11 +47,12 @@ public class PaintCanvas extends Canvas {
   }
 
   public void paint(Graphics g) {
-
     Graphics2D g2d = (Graphics2D) g;
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                          RenderingHints.VALUE_ANTIALIAS_ON);
+    g2d.setBackground(Color.red);
     super.paint(g);
+    g.setColor(Color.black);
     int i;
     for(i=0; i<points.size(); i++) {
       Point pt = points.get(i);

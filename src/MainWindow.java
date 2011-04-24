@@ -64,6 +64,10 @@ public class MainWindow extends JFrame {
     canvas.bindEvents();
   }
 
+  public PaintCanvas getCanvas() {
+    return canvas;
+  }
+
   private PaintCanvas canvas;
   private LeftPanel leftPanel;
   private Menu menubar;

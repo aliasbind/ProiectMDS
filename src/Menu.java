@@ -1,8 +1,14 @@
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import javax.swing.KeyStroke;
-
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -22,6 +28,16 @@ public class Menu extends JMenuBar {
     
     Save = new JMenuItem("Save");
     Save.setAccelerator(KeyStroke.getKeyStroke("ctrl S"));
+    Save.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+        OnSave(e);
+        }
+        
+        catch(IOException err) {
+        }
+      }
+    });
     File.add(Save);
     
     SaveAs = new JMenuItem("Save as");
@@ -91,6 +107,21 @@ public class Menu extends JMenuBar {
   private JMenuItem Delete;
 
   private MainWindow parent;
+
+  public void OnSave(ActionEvent e) throws IOException {
+    int imgWidth;
+    int imgHeight;
+
+    PaintCanvas mainCanvas = parent.getCanvas();
+    Dimension canvasDimension = mainCanvas.getSize();
+
+    imgWidth = canvasDimension.width;
+    imgHeight = canvasDimension.height;
+    
+    BufferedImage image = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
+    mainCanvas.paint(image.getGraphics());
+    ImageIO.write(image, "jpeg", new File("test.jpg"));
+  }
 
   public void OnQuit(ActionEvent e) {
     System.exit(0);
