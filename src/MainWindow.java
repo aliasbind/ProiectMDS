@@ -1,7 +1,11 @@
 import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentEvent;
+
+import javax.swing.BoxLayout;
 
 import javax.swing.KeyStroke;
 import javax.swing.JFrame;
@@ -62,6 +66,15 @@ public class MainWindow extends JFrame {
     layout.setConstraints(canvas, constraints);
     this.add(canvas);
     canvas.bindEvents();
+
+    canvas.addComponentListener(new ComponentListener() {
+      public void componentHidden(ComponentEvent e) {}
+      public void componentMoved(ComponentEvent e) {}
+      public void componentShown(ComponentEvent e) {}
+      public void componentResized(ComponentEvent e) {
+        canvas.repaint();
+      }
+    });
   }
 
   public PaintCanvas getCanvas() {

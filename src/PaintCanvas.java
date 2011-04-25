@@ -1,3 +1,4 @@
+import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -37,6 +38,7 @@ public class PaintCanvas extends Canvas {
 
   PaintCanvas() {
     paths = new ArrayList<GeneralPath>();
+    sizes = new ArrayList<Integer>();
     lastPoint = null;
     paintSize = 3;
   }
@@ -45,12 +47,14 @@ public class PaintCanvas extends Canvas {
 
     this.addMouseMotionListener(new MouseMotionListener() {
       public void mouseDragged(MouseEvent e) {
-        path.lineTo( (float) e.getX(), (float) e.getY() );
-        path.moveTo( (float) e.getX(), (float) e.getY() );
+        int x = e.getX();
+        int y = e.getY();
 
+        path.lineTo(x, y);
+        path.moveTo(x, y);
 
-        handleRepainting(lastPoint, new Point(e.getX(), e.getY()));
-        lastPoint = new Point(e.getX(), e.getY());
+        handleRepainting(lastPoint, new Point(x, y));
+        lastPoint = new Point(x, y);
       }
 
       public void mouseMoved(MouseEvent e) {}
@@ -59,14 +63,17 @@ public class PaintCanvas extends Canvas {
     this.addMouseListener(new MouseListener() {
       public void mousePressed(MouseEvent e) {
         path = new GeneralPath();
-        lastPoint = new Point(e.getX(), e.getY());
-
         path.moveTo(e.getX(), e.getY());
+        paths.add(path);
+
+        sizes.add(paintSize);
+        lastPoint = new Point(e.getX(), e.getY());
       }
 
       public void mouseReleased(MouseEvent e) {
-        paths.add(path);
+        System.out.println(paths.size());
       }
+
       public void mouseClicked(MouseEvent e) {}
       public void mouseEntered(MouseEvent e) {}
       public void mouseExited(MouseEvent e) {}
@@ -81,16 +88,12 @@ public class PaintCanvas extends Canvas {
     g.setColor(Color.black);
 
     super.paint(g);
-    //g2d.draw(path);
-    for(GeneralPath gp : paths) {
-      g2d.draw(path);
+
+    int i;
+    for(i=0; i<paths.size(); i++) {
+      g2d.setStroke(new BasicStroke(sizes.get(i)));
+      g2d.draw(paths.get(i));
     }
-    //int i;
-    //for(i=0; i<points.size(); i++) {
-      //Point pt = points.get(i);
-      //Integer x = sizes.get(i);
-      //g2d.fill(new Ellipse2D.Float(pt.x, pt.y, x, x));
-    //}
   }
 
   private void handleRepainting(Point start, Point end) {
