@@ -28,11 +28,15 @@ public class PaintCanvas extends Canvas {
 
   private GeneralPath path;
   private Point lastPoint;
+
+  private ArrayList<GeneralPath> paths;
+  private ArrayList<Integer> sizes;
+  
   private int paintSize;
   private JSlider slider;
 
   PaintCanvas() {
-    path = new GeneralPath();
+    paths = new ArrayList<GeneralPath>();
     lastPoint = null;
     paintSize = 3;
   }
@@ -41,13 +45,12 @@ public class PaintCanvas extends Canvas {
 
     this.addMouseMotionListener(new MouseMotionListener() {
       public void mouseDragged(MouseEvent e) {
-        path.lineTo((float) e.getX(), (float) e.getY());
-        path.moveTo((float) e.getX(), (float) e.getY());
-      //repaint(e.getX()-paintSize, e.getY()-paintSize, 
-      //paintSize*2, paintSize*2);
+        path.lineTo( (float) e.getX(), (float) e.getY() );
+        path.moveTo( (float) e.getX(), (float) e.getY() );
+
+
         handleRepainting(lastPoint, new Point(e.getX(), e.getY()));
         lastPoint = new Point(e.getX(), e.getY());
-      //repaint();
       }
 
       public void mouseMoved(MouseEvent e) {}
@@ -55,11 +58,15 @@ public class PaintCanvas extends Canvas {
 
     this.addMouseListener(new MouseListener() {
       public void mousePressed(MouseEvent e) {
-        path.moveTo(e.getX(), e.getY());
+        path = new GeneralPath();
         lastPoint = new Point(e.getX(), e.getY());
+
+        path.moveTo(e.getX(), e.getY());
       }
 
-      public void mouseReleased(MouseEvent e) {}
+      public void mouseReleased(MouseEvent e) {
+        paths.add(path);
+      }
       public void mouseClicked(MouseEvent e) {}
       public void mouseEntered(MouseEvent e) {}
       public void mouseExited(MouseEvent e) {}
@@ -74,7 +81,10 @@ public class PaintCanvas extends Canvas {
     g.setColor(Color.black);
 
     super.paint(g);
-    g2d.draw(path);
+    //g2d.draw(path);
+    for(GeneralPath gp : paths) {
+      g2d.draw(path);
+    }
     //int i;
     //for(i=0; i<points.size(); i++) {
       //Point pt = points.get(i);
@@ -84,8 +94,8 @@ public class PaintCanvas extends Canvas {
   }
 
   private void handleRepainting(Point start, Point end) {
-    int dx = Math.abs(start.x-end.x) + 3;
-    int dy = Math.abs(start.y-end.y) + 3;
+    int dx = Math.abs(start.x-end.x) + paintSize;
+    int dy = Math.abs(start.y-end.y) + paintSize;
 
     if(start.x < end.x) {
       if(start.y < end.y) {
