@@ -20,6 +20,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -44,6 +46,8 @@ public class PaintCanvas extends Canvas {
     private JLabel statusbar;
     private Color curentColor;
     private double scale;
+    private AffineTransform at;
+    private BufferedImage image;
 
 
     PaintCanvas() {
@@ -54,6 +58,9 @@ public class PaintCanvas extends Canvas {
         lastPoint = null;
         paintSize = 3;
         scale=1;
+        at = new AffineTransform();
+        this.setSize(1024, 768);
+        image=null;
     }
 
     public void bindEvents() {
@@ -133,6 +140,13 @@ public class PaintCanvas extends Canvas {
         super.paint(g);
 
         int i;
+        
+
+        if (image != null) {
+            System.out.println(image.toString());
+            g2d.drawImage(image, new AffineTransformOp(new AffineTransform(), AffineTransformOp.TYPE_BICUBIC),0, 0);
+        }
+
         for (i = 0; i < paths.size(); i++) {
             g.setColor(colors.get(i));
             g2d.setStroke(new BasicStroke(sizes.get(i)));
@@ -178,31 +192,29 @@ public class PaintCanvas extends Canvas {
         curentColor = selectedColor;
     }
 
-    void setScale(int i) {
-        AffineTransform at = new AffineTransform();
+    public void setScale(int i) {
 
-        if (scale < 0.05 && i == -1) {
-            return;
-        }
-        if (scale > 2 && i == 1) {
-            return;
+        switch(i) {
+            case 1:
+                scale = 1.25;
+                break;
+
+            case -1:
+                scale = 0.75;
+                break;
         }
 
-        if (i == 1) {
-            scale = scale + 0.25;
-            at.scale(scale, scale);
-        }
-        if (i == -1) {
-
-            scale = scale - 0.25;
-            if (scale==0) scale = 0.05;
-            at.scale(scale, scale);
-
-        }
+        at.setToScale(scale, scale);
+        
         for (GeneralPath gp : paths) {
             gp.transform(at);
         }
 
         this.repaint();
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
+        repaint();
     }
 }

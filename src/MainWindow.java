@@ -2,9 +2,11 @@
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.event.AdjustmentEvent;
 
 import java.awt.event.ComponentListener;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BoxLayout;
 
@@ -17,6 +19,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
 import java.awt.Dimension;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.WindowListener;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
@@ -31,7 +35,38 @@ public class MainWindow extends JFrame {
 
         setPreferredSize(new Dimension(900, 700));
         setSize(new Dimension(900, 700));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.addWindowListener(new WindowListener() {
+
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            public void windowClosing(WindowEvent e) {
+                Main.setWindowsNumber(-1);
+            }
+
+            public void windowClosed(WindowEvent e) {
+              //dispose();
+              
+            }
+
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         canvas.repaint();
     }
@@ -60,8 +95,9 @@ public class MainWindow extends JFrame {
         layout.setConstraints(leftPanel, constraints);
         this.add(leftPanel);
         
-        JLabel test = new JLabel("Fuck you!");
-        constraints.anchor = GridBagConstraints.SOUTH;
+        JLabel test = new JLabel("TEST");
+        constraints.anchor = GridBagConstraints.SOUTHWEST;
+        constraints.fill = GridBagConstraints.REMAINDER;
         layout.setConstraints(test, constraints);
         this.add(test);
     }
@@ -80,6 +116,8 @@ public class MainWindow extends JFrame {
 
 
         scrollPane = new JScrollPane(canvas);
+        
+
         layout.setConstraints(scrollPane, constraints);
         this.add(scrollPane);
 
@@ -96,6 +134,20 @@ public class MainWindow extends JFrame {
             }
 
             public void componentResized(ComponentEvent e) {
+                canvas.repaint();
+            }
+        });
+
+        scrollPane.getHorizontalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                canvas.repaint();
+            }
+        });
+
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+
+            public void adjustmentValueChanged(AdjustmentEvent e) {
                 canvas.repaint();
             }
         });

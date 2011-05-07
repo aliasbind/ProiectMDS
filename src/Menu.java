@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -20,11 +22,28 @@ public class Menu extends JMenuBar {
 
     New = new JMenuItem("New");
     New.setAccelerator(KeyStroke.getKeyStroke("ctrl N"));
+    New.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+              OnNew(e);
+            }
+        });
     File.add(New);
     
     Open = new JMenuItem("Open");
     Open.setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
+    Open.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    OnOpen(e);
+                } catch (IOException ex) {
+                    Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+    });
     File.add(Open);
+
     
     Save = new JMenuItem("Save");
     Save.setAccelerator(KeyStroke.getKeyStroke("ctrl S"));
@@ -108,6 +127,19 @@ public class Menu extends JMenuBar {
 
   private MainWindow parent;
 
+  public void OnNew(ActionEvent e) {
+      new MainWindow().setVisible(true);
+      Main.setWindowsNumber(1);
+  }
+
+  public void OnOpen(ActionEvent e) throws IOException {
+      File f = new File("test.jpg");
+
+      BufferedImage image = ImageIO.read(f);
+
+      parent.getCanvas().setImage(image);
+ }
+
   public void OnSave(ActionEvent e) throws IOException {
     int imgWidth;
     int imgHeight;
@@ -124,6 +156,7 @@ public class Menu extends JMenuBar {
   }
 
   public void OnQuit(ActionEvent e) {
-    System.exit(0);
+    parent.dispose();
+    Main.setWindowsNumber(-1);
   }
 }
