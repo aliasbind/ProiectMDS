@@ -71,8 +71,7 @@ public class MainWindow extends JFrame {
         InitLeftPanel();
         InitCanvas();
 
-        leftPanel.getStatusBar().getChooser().setCanvas(canvas);
-        leftPanel.getStatusBar().setCanvas(canvas);
+        leftPanel.setCanvas(canvas);
 
         this.pack();
     }
@@ -98,7 +97,7 @@ public class MainWindow extends JFrame {
     private void InitCanvas() {
         canvas = new PaintCanvas();
         canvas.attachSlider(leftPanel.getSlider());
-        canvas.attachStatusBar(leftPanel.getStatusBar().getLabel());
+        
 
 
         constraints.fill = GridBagConstraints.BOTH;
@@ -117,6 +116,7 @@ public class MainWindow extends JFrame {
 
         JPanel colStatPanel = new JPanel();
         JLabel test = new JLabel("TEST");
+        canvas.attachStatusBar(test);
         colStatPanel.add(test);
         constraints.weighty = 0;
         constraints.anchor = GridBagConstraints.SOUTHEAST;
