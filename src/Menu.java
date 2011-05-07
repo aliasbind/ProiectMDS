@@ -31,7 +31,7 @@ public class Menu extends JMenuBar {
     Save.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         try {
-        OnSave(e);
+            OnSave(e);
         }
         
         catch(IOException err) {
