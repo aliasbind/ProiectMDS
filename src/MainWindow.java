@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.WindowListener;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 public class MainWindow extends JFrame {
@@ -38,7 +39,6 @@ public class MainWindow extends JFrame {
         this.addWindowListener(new WindowListener() {
 
             public void windowOpened(WindowEvent e) {
-
             }
 
             public void windowClosing(WindowEvent e) {
@@ -46,24 +46,19 @@ public class MainWindow extends JFrame {
             }
 
             public void windowClosed(WindowEvent e) {
-              //dispose();
-              
+                //dispose();
             }
 
             public void windowIconified(WindowEvent e) {
-
             }
 
             public void windowDeiconified(WindowEvent e) {
-
             }
 
             public void windowActivated(WindowEvent e) {
-
             }
 
             public void windowDeactivated(WindowEvent e) {
-
             }
         });
 //        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,6 +73,7 @@ public class MainWindow extends JFrame {
 
         leftPanel.getStatusBar().getChooser().setCanvas(canvas);
         leftPanel.getStatusBar().setCanvas(canvas);
+
         this.pack();
     }
 
@@ -89,17 +85,14 @@ public class MainWindow extends JFrame {
 
     private void InitLeftPanel() {
         leftPanel = new LeftPanel();
+
         constraints.anchor = GridBagConstraints.NORTHWEST;
-//        constraints.weightx = 1;
-//        constraints.weighty = 1;
+        constraints.weightx = 0;
+        constraints.weighty = 1;
+        constraints.gridheight = 2;
         layout.setConstraints(leftPanel, constraints);
+
         this.add(leftPanel);
-        
-        JLabel test = new JLabel("TEST");
-        constraints.anchor = GridBagConstraints.SOUTHWEST;
-        constraints.fill = GridBagConstraints.REMAINDER;
-        layout.setConstraints(test, constraints);
-        this.add(test);
     }
 
     private void InitCanvas() {
@@ -110,16 +103,26 @@ public class MainWindow extends JFrame {
 
         constraints.fill = GridBagConstraints.BOTH;
         constraints.anchor = GridBagConstraints.CENTER;
-        constraints.weightx = 0.2;
-        constraints.weighty = 0.2;
+        constraints.weightx = 2;
+        constraints.weighty = 1;
+        constraints.gridheight = 1;
         constraints.gridwidth = GridBagConstraints.REMAINDER;
 
 
         scrollPane = new JScrollPane(canvas);
-        
+
 
         layout.setConstraints(scrollPane, constraints);
         this.add(scrollPane);
+
+        JPanel colStatPanel = new JPanel();
+        JLabel test = new JLabel("TEST");
+        colStatPanel.add(test);
+        constraints.weighty = 0;
+        constraints.anchor = GridBagConstraints.SOUTHEAST;
+//        constraints.fill = GridBagConstraints.REMAINDER;
+        layout.setConstraints(colStatPanel, constraints);
+        this.add(colStatPanel);
 
         canvas.bindEvents();
         canvas.addComponentListener(new ComponentListener() {
