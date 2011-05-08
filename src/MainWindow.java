@@ -109,18 +109,15 @@ public class MainWindow extends JFrame {
 
 
         scrollPane = new JScrollPane(canvas);
-
-
         layout.setConstraints(scrollPane, constraints);
         this.add(scrollPane);
 
         JPanel colStatPanel = new JPanel();
-        JLabel test = new JLabel("TEST");
-        canvas.attachStatusBar(test);
-        colStatPanel.add(test);
+        JLabel colorStatusLabel = new JLabel("TEST");
+        canvas.attachStatusBar(colorStatusLabel);
+        colStatPanel.add(colorStatusLabel);
         constraints.weighty = 0;
         constraints.anchor = GridBagConstraints.SOUTHEAST;
-//        constraints.fill = GridBagConstraints.REMAINDER;
         layout.setConstraints(colStatPanel, constraints);
         this.add(colStatPanel);
 
@@ -159,6 +156,7 @@ public class MainWindow extends JFrame {
     public PaintCanvas getCanvas() {
         return canvas;
     }
+    
     private PaintCanvas canvas;
     private LeftPanel leftPanel;
     private Menu menubar;

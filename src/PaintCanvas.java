@@ -48,6 +48,8 @@ public class PaintCanvas extends Canvas {
     private double scale;
     private AffineTransform at;
     private BufferedImage image;
+    private BufferedImage imageForPixelRGB;
+    private boolean canvasChanged;
 
 
     PaintCanvas() {
@@ -60,7 +62,9 @@ public class PaintCanvas extends Canvas {
         scale=1;
         at = new AffineTransform();
         this.setSize(1024, 768);
-        image=null;
+        image = null;
+        imageForPixelRGB = null;
+        canvasChanged = true;
     }
 
     public void bindEvents() {
@@ -85,14 +89,20 @@ public class PaintCanvas extends Canvas {
             }
 
             public void mouseMoved(MouseEvent e) {
-                try {
-                    Robot robotel = new Robot();
-                    //statusbar.setText(robotel.getPixelColor(e.getX(), e.getY()).toString());
-                    //System.out.println(robotel.getPixelColor(e.getX(), e.getY()).toString());
-                } catch (AWTException ex) {
-                    Logger.getLogger(PaintCanvas.class.getName()).log(Level.SEVERE, null, ex);
+                if(imageForPixelRGB == null)
+                    imageForPixelRGB = (BufferedImage) createImage(getWidth(), getHeight());
+                
+                if(canvasChanged) {
+                    Graphics g = imageForPixelRGB.getGraphics();
+                    paint(g);
+                    canvasChanged = false;
                 }
                 
+                int color = imageForPixelRGB.getRGB(e.getX(), e.getY());
+                int red   = (color & 0x00ff0000) >> 16;
+                int green = (color & 0x0000ff00) >> 8;
+                int blue  =  color & 0x000000ff;
+                statusbar.setText("R: " + red + " G: " + green + " B: " + blue);             
             }
         });
 
@@ -103,7 +113,7 @@ public class PaintCanvas extends Canvas {
                 path.moveTo(e.getX(), e.getY());
                 paths.add(path);
 
-
+                canvasChanged = true;
                 sizes.add(paintSize);
                 lastPoint = new Point(e.getX(), e.getY());
                 if (e.getButton() == MouseEvent.BUTTON1) {
