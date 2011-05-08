@@ -6,6 +6,7 @@ import java.awt.event.AdjustmentEvent;
 
 import java.awt.event.ComponentListener;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 
 import javax.swing.BoxLayout;
@@ -19,7 +20,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,6 +39,7 @@ public class MainWindow extends JFrame {
 
         setPreferredSize(new Dimension(900, 700));
         setSize(new Dimension(900, 700));
+        
         this.addWindowListener(new WindowListener() {
 
             public void windowOpened(WindowEvent e) {
@@ -61,8 +65,9 @@ public class MainWindow extends JFrame {
             public void windowDeactivated(WindowEvent e) {
             }
         });
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         setVisible(true);
+        setLocation(200, 200);
         canvas.repaint();
     }
 

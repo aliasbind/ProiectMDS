@@ -101,6 +101,13 @@ public class Menu extends JMenuBar {
 
         Delete = new JMenuItem("Delete");
         Delete.setAccelerator(KeyStroke.getKeyStroke("DELETE"));
+        Delete.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                OnDelete(e);
+            }
+        });
+        
         Edit.add(Delete);
 
         this.add(File);
@@ -157,5 +164,9 @@ public class Menu extends JMenuBar {
     public void OnQuit(ActionEvent e) {
         parent.dispose();
         Main.setWindowsNumber(-1);
+    }
+    
+    public void OnDelete(ActionEvent e) {
+        parent.getCanvas().deleteSelectedArea();
     }
 }

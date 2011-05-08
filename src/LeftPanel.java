@@ -23,7 +23,8 @@ public class LeftPanel extends javax.swing.JPanel {
     private PaintCanvas canvas;
     
     /**
-     * 
+     * Creaza panoul din stanga si initializeaza
+     * ColorChooser-ul.
      */
     public LeftPanel() {
         initComponents();
@@ -32,7 +33,10 @@ public class LeftPanel extends javax.swing.JPanel {
     
     /**
      * 
-     * @param canvas Seteaza canvas-ul.
+     * Seteaza canvas-ul peste care se vor
+     * aplica butoanele de zoom si de alegere a culorii, precum si
+     * slider-ul de modificare a grosimii brush-ului.
+     *
      */
     public void setCanvas(PaintCanvas canvas){
         this.canvas=canvas;
@@ -41,7 +45,7 @@ public class LeftPanel extends javax.swing.JPanel {
     
     /**
      * 
-     * @return
+     * Returneaza obiectul slider-ului.
      */
     public JSlider getSlider() {
         return jSlider1;
@@ -56,6 +60,7 @@ public class LeftPanel extends javax.swing.JPanel {
         ZoomIn = new javax.swing.JButton();
         ColorPickerButton = new javax.swing.JButton();
         ZoomOut = new javax.swing.JButton();
+        SelectButton = new javax.swing.JButton();
 
         jSlider1.setMaximum(21);
         jSlider1.setMinimum(1);
@@ -84,6 +89,13 @@ public class LeftPanel extends javax.swing.JPanel {
             }
         });
 
+        SelectButton.setText("Select");
+        SelectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SelectButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,14 +106,15 @@ public class LeftPanel extends javax.swing.JPanel {
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSlider1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(ZoomIn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ZoomOut, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(ColorPickerButton, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(73, 73, 73)))
+                        .addComponent(ZoomIn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ZoomOut, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ColorPickerButton, javax.swing.GroupLayout.Alignment.LEADING))
                 .addGap(29, 29, 29))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(SelectButton)
+                .addContainerGap(142, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,7 +129,9 @@ public class LeftPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ZoomIn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ZoomOut, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
-                .addGap(84, 84, 84))
+                .addGap(42, 42, 42)
+                .addComponent(SelectButton)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -132,8 +147,14 @@ public class LeftPanel extends javax.swing.JPanel {
         canvas.setScale(-1);
 }//GEN-LAST:event_ZoomOutActionPerformed
 
+    private void SelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectButtonActionPerformed
+        canvas.setSelectionMode(true);
+        canvas.setFocusable(true);
+    }//GEN-LAST:event_SelectButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ColorPickerButton;
+    private javax.swing.JButton SelectButton;
     private javax.swing.JButton ZoomIn;
     private javax.swing.JButton ZoomOut;
     private javax.swing.JLabel jLabel1;
