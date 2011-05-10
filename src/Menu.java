@@ -17,9 +17,16 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
+import javax.swing.*;
+
 public class Menu extends JMenuBar {
 
+    private boolean alreadysave;
+    private File savelocation;
+
     Menu() {
+        alreadysave=false;
+
         File = new JMenu("File");
 
         New = new JMenuItem("New");
@@ -53,15 +60,27 @@ public class Menu extends JMenuBar {
 
             public void actionPerformed(ActionEvent e) {
                 try {
-                    OnSave(e);
-                } catch (IOException err) {
-                }
+                    if(alreadysave)
+                    {
+                         Saved(e);
+                    }
+                    else
+                        OnSave(e);
+                }catch(IOException err){}
             }
         });
         File.add(Save);
 
         SaveAs = new JMenuItem("Save as");
         File.add(SaveAs);
+        SaveAs.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                try {
+                        OnSave(e);
+                }catch(IOException err){}
+            }
+        });
 
         File.add(new JSeparator());
 
@@ -139,14 +158,33 @@ public class Menu extends JMenuBar {
     }
 
     public void OnOpen(ActionEvent e) throws IOException {
-        File f = new File("test.jpg");
 
-        BufferedImage image = ImageIO.read(f);
+        JFileChooser fc;
 
-        parent.getCanvas().setImage(image);
+            fc = new JFileChooser();
+            fc.addChoosableFileFilter(new ImageFilter("bmp"));
+            fc.addChoosableFileFilter(new ImageFilter("gif"));
+            fc.addChoosableFileFilter(new ImageFilter("jpg"));
+            fc.addChoosableFileFilter(new ImageFilter("jpeg"));
+            fc.addChoosableFileFilter(new ImageFilter("png"));
+            fc.addChoosableFileFilter(new ImageFilter("Toate pozele"));
+            fc.setAcceptAllFileFilterUsed(false);
+            fc.setAccessory(new ImagePreview(fc));
+            
+        File f ;
+        JPanel aux=new JPanel();
+        int returnVal = fc.showDialog(aux,"Select");
+
+        //Process the results.
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+        {
+            f = fc.getSelectedFile();
+            BufferedImage image = ImageIO.read(f);
+            parent.getCanvas().setImage(image);
+        }
     }
 
-    public void OnSave(ActionEvent e) throws IOException {
+    public void Saved(ActionEvent e) throws IOException {
         int imgWidth;
         int imgHeight;
 
@@ -158,7 +196,50 @@ public class Menu extends JMenuBar {
 
         BufferedImage image = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
         mainCanvas.paint(image.getGraphics());
-        ImageIO.write(image, "jpeg", new File("test.jpg"));
+        ImageIO.write(image, "jpeg",savelocation);
+
+    }
+
+    public void OnSave(ActionEvent e) throws IOException {
+        int imgWidth;
+        int imgHeight;
+
+        JFileChooser fc2=new JFileChooser("Save");
+
+        PaintCanvas mainCanvas = parent.getCanvas();
+        Dimension canvasDimension = mainCanvas.getSize();
+
+        imgWidth = canvasDimension.width;
+        imgHeight = canvasDimension.height;
+
+        fc2 = new JFileChooser();
+        File initial = new File("Untitled");
+        fc2.setSelectedFile(initial);
+        fc2.addChoosableFileFilter(new ImageFilter("bmp"));
+        fc2.addChoosableFileFilter(new ImageFilter("gif"));
+        fc2.addChoosableFileFilter(new ImageFilter("jpeg"));
+        fc2.addChoosableFileFilter(new ImageFilter("png"));
+        fc2.addChoosableFileFilter(new ImageFilter("jpg"));
+        fc2.setAcceptAllFileFilterUsed(false);
+        JPanel aux=new JPanel();
+        int returnVal = fc2.showSaveDialog(aux);
+            if (returnVal == JFileChooser.APPROVE_OPTION)
+            {
+                File file = fc2.getSelectedFile();
+                if(Utils.getExtension(file)==null)
+                {
+
+                    String path=file.toString();
+                    path=path.concat("."+fc2.getFileFilter().getDescription());
+                    file=new File(path);
+                }
+                BufferedImage image = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
+                mainCanvas.paint(image.getGraphics());
+                ImageIO.write(image, "jpeg",file);
+                alreadysave=true;
+                savelocation=file;
+
+            } 
     }
 
     public void OnQuit(ActionEvent e) {
