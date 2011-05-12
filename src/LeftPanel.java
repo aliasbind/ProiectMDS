@@ -1,4 +1,5 @@
 
+import java.awt.Color;
 import javax.swing.JSlider;
 
 /*
@@ -20,6 +21,7 @@ public class LeftPanel extends javax.swing.JPanel {
     /** Creates new form LeftPanel */
     
     private ColorChooser chooser;
+    private ColorSwapper colswap;
     private PaintCanvas canvas;
     
     /**
@@ -29,6 +31,7 @@ public class LeftPanel extends javax.swing.JPanel {
     public LeftPanel() {
         initComponents();
         chooser = new ColorChooser();
+        colswap = new ColorSwapper();
     }
     
     /**
@@ -41,6 +44,7 @@ public class LeftPanel extends javax.swing.JPanel {
     public void setCanvas(PaintCanvas canvas){
         this.canvas=canvas;
         chooser.setCanvas(this.canvas);
+        colswap.setCanvas(this.canvas);
     }
     
     /**
@@ -61,6 +65,8 @@ public class LeftPanel extends javax.swing.JPanel {
         ColorPickerButton = new javax.swing.JButton();
         ZoomOut = new javax.swing.JButton();
         SelectButton = new javax.swing.JButton();
+        ColorSwapperButton = new javax.swing.JButton();
+        RemCurrentColor = new javax.swing.JButton();
 
         jSlider1.setMaximum(21);
         jSlider1.setMinimum(1);
@@ -96,25 +102,46 @@ public class LeftPanel extends javax.swing.JPanel {
             }
         });
 
+        ColorSwapperButton.setText("Color Swapper");
+        ColorSwapperButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ColorSwapperButtonActionPerformed(evt);
+            }
+        });
+
+        RemCurrentColor.setText("Remove current color");
+        RemCurrentColor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RemCurrentColorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSlider1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(ZoomIn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ZoomOut, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(ColorPickerButton, javax.swing.GroupLayout.Alignment.LEADING))
-                .addGap(29, 29, 29))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(SelectButton)
-                .addContainerGap(142, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSlider1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(ZoomIn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ZoomOut, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ColorPickerButton, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(29, 29, 29))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ColorSwapperButton)
+                        .addContainerGap(83, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(SelectButton)
+                        .addContainerGap(142, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(RemCurrentColor)
+                        .addContainerGap(36, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,7 +156,11 @@ public class LeftPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ZoomIn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ZoomOut, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
-                .addGap(42, 42, 42)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ColorSwapperButton)
+                .addGap(18, 18, 18)
+                .addComponent(RemCurrentColor)
+                .addGap(36, 36, 36)
                 .addComponent(SelectButton)
                 .addContainerGap())
         );
@@ -152,8 +183,18 @@ public class LeftPanel extends javax.swing.JPanel {
         canvas.setFocusable(true);
     }//GEN-LAST:event_SelectButtonActionPerformed
 
+    private void ColorSwapperButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ColorSwapperButtonActionPerformed
+        colswap.setVisible(true);
+    }//GEN-LAST:event_ColorSwapperButtonActionPerformed
+
+    private void RemCurrentColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemCurrentColorActionPerformed
+        canvas.replaceColor(Color.white);
+    }//GEN-LAST:event_RemCurrentColorActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ColorPickerButton;
+    private javax.swing.JButton ColorSwapperButton;
+    private javax.swing.JButton RemCurrentColor;
     private javax.swing.JButton SelectButton;
     private javax.swing.JButton ZoomIn;
     private javax.swing.JButton ZoomOut;

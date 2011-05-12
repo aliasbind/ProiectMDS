@@ -1,28 +1,18 @@
 
-import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.AdjustmentEvent;
 
 import java.awt.event.ComponentListener;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 
-import javax.swing.BoxLayout;
 
-import javax.swing.KeyStroke;
 import javax.swing.JFrame;
 
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.AdjustmentListener;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

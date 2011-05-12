@@ -11,6 +11,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.KeyListener;
 
 import java.awt.event.MouseListener;
@@ -32,11 +33,9 @@ public class PaintCanvas extends Canvas {
 
     private GeneralPath path;
     private Point lastPoint;
-    private ArrayList<GeneralPath> paths;
+    private ArrayList<Shape> shapes;
     private ArrayList<Integer> sizes;
     private ArrayList<Color> colors;
-    private ArrayList<Rectangle> deletedSpots;
-    
     private int paintSize;
     private JSlider slider;
     private JLabel statusbar;
@@ -45,16 +44,18 @@ public class PaintCanvas extends Canvas {
     private AffineTransform at;
     private BufferedImage image;
     private BufferedImage imageForPixelRGB;
+    private int colorHover;
     private boolean canvasChanged;
     private boolean selectionMode;
     private Rectangle selectionRectangle;
 
     PaintCanvas() {
-        paths = new ArrayList<GeneralPath>();
+        shapes = new ArrayList<Shape>();
         sizes = new ArrayList<Integer>();
         colors = new ArrayList<Color>();
-        deletedSpots = new ArrayList<Rectangle>();
+
         curentColor = Color.black;
+        colorHover = 0;
         lastPoint = null;
         paintSize = 3;
         scale = 1;
@@ -74,6 +75,10 @@ public class PaintCanvas extends Canvas {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     setSelectionMode(false);
                 }
+
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    curentColor = new Color(colorHover);
+                }
             }
 
             public void keyReleased(KeyEvent e) {
@@ -88,7 +93,7 @@ public class PaintCanvas extends Canvas {
             public void mouseDragged(MouseEvent e) {
                 int x = e.getX();
                 int y = e.getY();
-                
+
                 if (selectionMode == false) {
                     Rectangle bounds = getBounds();
 
@@ -105,7 +110,7 @@ public class PaintCanvas extends Canvas {
                     }
                 } else {
                     Point src = selectionRectangle.getLocation();
-                    selectionRectangle.setSize(x-src.x + 1, y-src.y + 1);
+                    selectionRectangle.setSize(x - src.x + 1, y - src.y + 1);
                     repaint();
                 }
             }
@@ -121,10 +126,10 @@ public class PaintCanvas extends Canvas {
                     canvasChanged = false;
                 }
 
-                int color = imageForPixelRGB.getRGB(e.getX(), e.getY());
-                int red = (color & 0x00ff0000) >> 16;
-                int green = (color & 0x0000ff00) >> 8;
-                int blue = color & 0x000000ff;
+                colorHover = imageForPixelRGB.getRGB(e.getX(), e.getY());
+                int red = (colorHover & 0x00ff0000) >> 16;
+                int green = (colorHover & 0x0000ff00) >> 8;
+                int blue = colorHover & 0x000000ff;
                 statusbar.setText("R: " + red + " G: " + green + " B: " + blue);
             }
         });
@@ -135,7 +140,7 @@ public class PaintCanvas extends Canvas {
                 if (selectionMode == false) {
                     path = new GeneralPath();
                     path.moveTo(e.getX(), e.getY());
-                    paths.add(path);
+                    shapes.add(path);
 
                     canvasChanged = true;
                     sizes.add(paintSize);
@@ -180,11 +185,23 @@ public class PaintCanvas extends Canvas {
             g2d.drawImage(image, new AffineTransformOp(new AffineTransform(), AffineTransformOp.TYPE_BICUBIC), 0, 0);
         }
 
+        int color_counter = 0;
+        int stroke_counter = 0;
         int i;
-        for (i = 0; i < paths.size(); i++) {
-            g.setColor(colors.get(i));
-            g2d.setStroke(new BasicStroke(sizes.get(i)));
-            g2d.draw(paths.get(i));
+
+        for (i = 0; i < shapes.size(); i++) {
+            if (shapes.get(i) instanceof GeneralPath) {
+                g.setColor(colors.get(color_counter));
+                g2d.setStroke(new BasicStroke(sizes.get(stroke_counter)));
+                g2d.draw(shapes.get(i));
+                color_counter++;
+                stroke_counter++;
+            }
+            
+            if (shapes.get(i) instanceof Rectangle) {
+                g.setColor(Color.white);
+                g2d.fill(shapes.get(i));
+            }
         }
 
         if (selectionMode && selectionRectangle != null) {
@@ -193,10 +210,6 @@ public class PaintCanvas extends Canvas {
             g2d.draw(selectionRectangle);
         }
         
-        for(i = 0; i < deletedSpots.size(); i++) {
-            g.setColor(Color.white);
-            g2d.fill(deletedSpots.get(i));
-        }
     }
 
     private void handleRepainting(Point start, Point end) {
@@ -251,8 +264,12 @@ public class PaintCanvas extends Canvas {
 
         at.setToScale(scale, scale);
 
-        for (GeneralPath gp : paths) {
-            gp.transform(at);
+        for (Shape sp : shapes) {
+            if (sp instanceof GeneralPath) {
+                GeneralPath gp = (GeneralPath) sp;
+                gp.transform(at);
+            }
+
         }
 
         this.repaint();
@@ -265,19 +282,32 @@ public class PaintCanvas extends Canvas {
 
     public void setSelectionMode(boolean b) {
         if (b) {
-            System.out.println("Selection Mode Activated");
             selectionRectangle = new Rectangle();
-        } else {
-            System.out.println("Selection Mode Deactivated");
         }
 
         selectionMode = b;
     }
 
     public void deleteSelectedArea() {
-        deletedSpots.add(selectionRectangle);
+        shapes.add(selectionRectangle);
+        
         repaint(selectionRectangle.x, selectionRectangle.y,
-                selectionRectangle.width+10, selectionRectangle.height+10);
+                selectionRectangle.width + 10, selectionRectangle.height + 10);
         selectionMode = false;
+    }
+
+    public void replaceColor(Color selectedColor) {
+        int i;
+        for (i = 0; i < colors.size(); i++) {
+            if (colors.get(i).getRGB() == curentColor.getRGB()) {
+                colors.set(i, selectedColor);
+            }
+        }
+        repaint();
+    }
+
+    public void clearArrays() {
+        shapes.clear();
+        colors.clear();
     }
 }

@@ -182,6 +182,8 @@ public class Menu extends JMenuBar {
             BufferedImage image = ImageIO.read(f);
             parent.getCanvas().setImage(image);
         }
+        
+        parent.getCanvas().clearArrays();
     }
 
     public void Saved(ActionEvent e) throws IOException {
