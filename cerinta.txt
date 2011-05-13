@@ -1,0 +1,30 @@
+4. (echipa de 3-5)
+Editor grafic, cu urmatoarele facilitati:
+ - lucrul cu mai multe ferestre simultan;
+ - meniu cu New, Open, Save, Save as, Close, Exit; imaginile pot fi salvate/
+  incarcate ca bmp, jpg; la crearea/incarcarea unei imagini sa se poata
+  specifica/modifica dimensiunea, numarul de culori, sa se poata adauga/
+  elimina/edita culorile (specificand proportia de culori fundamentale); la
+  salvarea jpg sa se poata specifica nivelul de compresie;
+ - scroll si zoom intr-o fereastra;
+ - desenare punct/linie/guma cu mouse-ul, folosind o culoare si grosime
+  curente selectate dintr-un meniu; linia se obtine prin deplasare cu click
+  stanga apasat, guma prin deplasare cu clic dreapta apasat;
+ - in permanenta se afisaza undeva proportia de culori fundamentale in
+  culoarea pixelului unde este mouse-ul pe imaginea curenta; la apasarea
+  unei taste/buton mouse ea devine culoare curenta de desenare si se adauga
+  la meniul de culori;
+ - cu mouse-ul se poate defini o suprafata poligonala iar la apsarea unui
+  buton sau clic ea devine solidara cu mouseul si se deplaseaza odata cu el;
+  in acest caz, la apsarea altor butoane/taste/clic ea se poate roti sau
+  zoom-a; daca mouse-ul intra in alta fereastra, zona decupata il insoteste;
+  la apasarea unui buton/tasta/clic ea este drop-ata peste imaginea de
+  dedesubt la pozitia curenta;
+ - bucata decupata cu mouse-ul sa se poata salva in clipboard si de aici
+  intr-o fereastra noua;
+ - bucata decupata cu mouse-ul sa se poata edita separat (apoi sa redevina
+  solidara cu mouse-ul) in sensul de a-i putea defini pixeli transparenti
+  (anume toti pixelii care au aceeasi culoare cu cel indicat de mouse sa
+  devina transparentei) si atunci cand va fi drop-ata ei sa nu se deseneze;
+ - cateva nivele de undo (macar posibilitatea de a pune la loc asa cum era
+  bucata decupata cu mouse-ul).
