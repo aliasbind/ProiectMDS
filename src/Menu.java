@@ -219,7 +219,6 @@ public class Menu extends JMenuBar {
         fc2.setSelectedFile(initial);
         fc2.addChoosableFileFilter(new ImageFilter("bmp"));
         fc2.addChoosableFileFilter(new ImageFilter("gif"));
-        fc2.addChoosableFileFilter(new ImageFilter("jpeg"));
         fc2.addChoosableFileFilter(new ImageFilter("png"));
         fc2.addChoosableFileFilter(new ImageFilter("jpg"));
         fc2.setAcceptAllFileFilterUsed(false);

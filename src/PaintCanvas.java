@@ -41,6 +41,7 @@ public class PaintCanvas extends Canvas {
     private JLabel statusbar;
     private Color curentColor;
     private double scale;
+    private double imageScale;
     private AffineTransform at;
     private BufferedImage image;
     private BufferedImage imageForPixelRGB;
@@ -59,6 +60,7 @@ public class PaintCanvas extends Canvas {
         lastPoint = null;
         paintSize = 3;
         scale = 1;
+        imageScale = 1;
         at = new AffineTransform();
         this.setSize(1024, 768);
         image = null;
@@ -181,8 +183,7 @@ public class PaintCanvas extends Canvas {
         super.paint(g);
 
         if (image != null) {
-            System.out.println(image.toString());
-            g2d.drawImage(image, new AffineTransformOp(new AffineTransform(), AffineTransformOp.TYPE_BICUBIC), 0, 0);
+            g2d.drawImage(image, new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC), 0, 0);
         }
 
         int color_counter = 0;
@@ -197,7 +198,7 @@ public class PaintCanvas extends Canvas {
                 color_counter++;
                 stroke_counter++;
             }
-            
+
             if (shapes.get(i) instanceof Rectangle) {
                 g.setColor(Color.white);
                 g2d.fill(shapes.get(i));
@@ -209,7 +210,7 @@ public class PaintCanvas extends Canvas {
             g2d.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f));
             g2d.draw(selectionRectangle);
         }
-        
+
     }
 
     private void handleRepainting(Point start, Point end) {
@@ -255,10 +256,12 @@ public class PaintCanvas extends Canvas {
         switch (i) {
             case 1:
                 scale = 1.25;
+                imageScale += imageScale/4;
                 break;
 
             case -1:
                 scale = 0.75;
+                imageScale -= imageScale/4;
                 break;
         }
 
@@ -269,9 +272,9 @@ public class PaintCanvas extends Canvas {
                 GeneralPath gp = (GeneralPath) sp;
                 gp.transform(at);
             }
-
         }
-
+        
+        at.setToScale(imageScale, imageScale);
         this.repaint();
     }
 
@@ -290,7 +293,7 @@ public class PaintCanvas extends Canvas {
 
     public void deleteSelectedArea() {
         shapes.add(selectionRectangle);
-        
+
         repaint(selectionRectangle.x, selectionRectangle.y,
                 selectionRectangle.width + 10, selectionRectangle.height + 10);
         selectionMode = false;
